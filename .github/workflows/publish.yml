@@ -48,7 +48,7 @@ jobs:
       - name: Pack with nuget.exe
         run: |
           nuget pack CustomMessageBox/CustomMessageBox.csproj `
-            -Properties "Configuration=Release;Version=${{ steps.version.outputs.VERSION }}" `
+            -Properties "Configuration=Release;PackageVersion=${{ steps.version.outputs.VERSION }};AssemblyVersion=${{ steps.version.outputs.VERSION }}" `
             -Version ${{ steps.version.outputs.VERSION }} `
             -OutputDirectory artifacts
 
