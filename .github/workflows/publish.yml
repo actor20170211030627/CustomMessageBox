@@ -44,9 +44,10 @@ jobs:
           echo "VERSION=$VERSION" >> $env:GITHUB_OUTPUT
         shell: pwsh
 
+      # 关键修改：加上子文件夹路径
       - name: Pack with nuget.exe
         run: |
-          nuget pack CustomMessageBox.csproj -Properties Configuration=Release -Version ${{ steps.version.outputs.VERSION }} -OutputDirectory artifacts
+          nuget pack CustomMessageBox/CustomMessageBox.csproj -Properties Configuration=Release -Version ${{ steps.version.outputs.VERSION }} -OutputDirectory artifacts
 
       - name: NuGet login (OIDC → temp API key)
         id: login
