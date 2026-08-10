@@ -1,4 +1,4 @@
-name: Publish to GitHub Packages
+name: Publish to NuGet.org
 
 on:
   push:
@@ -6,21 +6,45 @@ on:
       - 'v*'  # 当你推送 v1.0.0, v1.0.1 等标签时自动触发
 
 jobs:
-  publish:
-    runs-on: ubuntu-latest
+  build-and-publish:
+    runs-on: windows-latest  # .NET Framework 项目需要在 Windows 上构建
+
+    # 关键：授予请求 OIDC 令牌的权限，这是 Trusted Publishing 的核心
+    permissions:
+      id-token: write
+      contents: read
+
     steps:
+      # 1. 拉取代码
       - uses: actions/checkout@v4
 
-      - name: Setup .NET
+      # 2. 安装 .NET SDK (用于运行 dotnet 命令)
+      - name: Setup .NET SDK
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '6.0.x'
 
-      - name: Pack
-        run: dotnet pack --configuration Release -p:PackageVersion=${GITHUB_REF#refs/tags/v}
+      # 3. 还原依赖、构建、打包
+      - name: Restore dependencies
+        run: dotnet restore
 
-      - name: Push to GitHub Packages
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Pack
+        run: dotnet pack --configuration Release --no-build --output ./artifacts
+
+      # 4. 通过 OIDC 获取 NuGet 临时 API Key (核心步骤)
+      - name: NuGet login (OIDC → temp API key)
+        uses: NuGet/login@v1
+        id: login
+        with:
+          # 使用之前设置的 Secret
+          user: ${{ secrets.NUGET_USER }}
+
+      # 5. 使用临时 API Key 推送包到 NuGet.org
+      - name: Push to NuGet.org
         run: |
-          dotnet nuget push "**/*.nupkg" \
-            --source "https://nuget.pkg.github.com/actor20170211030627/index.json" \
-            --api-key ${{ secrets.GITHUB_TOKEN }}
+          dotnet nuget push "./artifacts/*.nupkg" `
+            --api-key ${{ steps.login.outputs.NUGET_API_KEY }} `
+            --source https://api.nuget.org/v3/index.json
