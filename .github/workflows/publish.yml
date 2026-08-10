@@ -52,18 +52,18 @@ jobs:
             -Version ${{ steps.version.outputs.VERSION }} `
             -OutputDirectory artifacts
 
-      - name: List artifacts (debug)
+      - name: List artifacts
         run: dir artifacts
 
-      - name: NuGet login (OIDC → temp API key)
+      # === 使用更稳定的 OIDC Action ===
+      - name: Login to NuGet via OIDC
         id: login
-        uses: NuGet/login@v1
+        uses: ceposta/nuget-login-oidc@v1
         with:
           user: ${{ secrets.NUGET_USER }}   # 确保你在 GitHub Secrets 中设置了 NUGET_USER
 
       - name: Push to NuGet.org
         run: |
-          # 使用 Get-ChildItem 找到 .nupkg 文件并推送
           $pkg = Get-ChildItem artifacts\*.nupkg | Select-Object -First 1
           if ($pkg) {
             Write-Host "Pushing: $($pkg.FullName)"
