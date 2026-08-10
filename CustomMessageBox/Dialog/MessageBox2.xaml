@@ -1,0 +1,76 @@
+﻿<Window x:Class="CustomMessageBox.Dialog.MessageBox2"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        mc:Ignorable="d"
+        Title="MessageBox2"
+        Width="456"
+        Height="Auto"
+        SizeToContent="Height"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        WindowStyle="SingleBorderWindow"
+        ShowInTaskbar="False"
+        FontFamily="Segoe UI" FontSize="13"
+        Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid
+            Grid.Row="0"
+            Grid.Column="0"
+            Margin="24,20,24,30">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+
+            <!-- 图标控件（支持 ImageSource 或 内置矢量） -->
+            <Image
+                x:Name="Image_Icon"
+                Grid.Row="0"
+                Grid.Column="0"
+                Width="32" Height="32"
+                Margin="0,0,10,0"
+                Visibility="Visible" />
+
+            <!-- 消息文本 -->
+            <TextBlock
+                x:Name="TB_Message"
+                Grid.Row="0"
+                Grid.Column="1"
+                TextWrapping="Wrap"
+                VerticalAlignment="Center"
+                Text="Message" />
+        </Grid>
+
+
+        <!-- 第二行：按钮区域 -->
+        <Grid
+            Grid.Row="1"
+            Grid.Column="0"
+            Background="#F0F0F0">
+
+            <StackPanel
+                x:Name="StackPanel_Buttons"
+                Grid.Row="0"
+                Grid.Column="0"
+                Orientation="Horizontal"
+                HorizontalAlignment="Right"
+                Margin="0,10,18,10">
+                <Button
+                    MinWidth="75"
+                    Height="26"
+                    Padding="8 4"
+                    Margin="8 0 0 0"
+                    Content="Ok" />
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>

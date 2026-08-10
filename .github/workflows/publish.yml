@@ -1,0 +1,26 @@
+name: Publish to GitHub Packages
+
+on:
+  push:
+    tags:
+      - 'v*'  # 当你推送 v1.0.0, v1.0.1 等标签时自动触发
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '6.0.x'
+
+      - name: Pack
+        run: dotnet pack --configuration Release -p:PackageVersion=${GITHUB_REF#refs/tags/v}
+
+      - name: Push to GitHub Packages
+        run: |
+          dotnet nuget push "**/*.nupkg" \
+            --source "https://nuget.pkg.github.com/actor20170211030627/index.json" \
+            --api-key ${{ secrets.GITHUB_TOKEN }}
