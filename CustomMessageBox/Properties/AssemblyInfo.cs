@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("CustomMessageBox")]
+//[assembly: AssemblyTitle("CustomMessageBox.Actor.WPF")]   //改了NuGet打包id还是不对
 [assembly: AssemblyDescription("一个可定制的 WPF MessageBox 控件。(A custom MessageBox)")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Fate")]

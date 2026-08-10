@@ -47,10 +47,15 @@ jobs:
       # 关键修改：加上子文件夹路径
       - name: Pack with nuget.exe
         run: |
-          nuget pack CustomMessageBox/CustomMessageBox.csproj `
-            -Properties "Configuration=Release;PackageVersion=${{ steps.version.outputs.VERSION }};AssemblyVersion=${{ steps.version.outputs.VERSION }}" `
-            -Version ${{ steps.version.outputs.VERSION }} `
-            -OutputDirectory artifacts
+          nuget pack CustomMessageBox/CustomMessageBox.nuspec -Version ${{ steps.version.outputs.VERSION }} -OutputDirectory artifacts
+        
+#        run: |
+#          nuget pack CustomMessageBox/CustomMessageBox.csproj `
+#      # 虽然有 <PackageId>CustomMessageBox.Actor.WPF</PackageId>，但 nuget pack 不会使用它。(项目是传统的 .NET Framework 项目（非 SDK 风格）)
+#            -Id CustomMessageBox.Actor.WPF `
+#            -Properties "Configuration=Release;PackageVersion=${{ steps.version.outputs.VERSION }};AssemblyVersion=${{ steps.version.outputs.VERSION }}" `
+#            -Version ${{ steps.version.outputs.VERSION }} `
+#            -OutputDirectory artifacts
 
       - name: List artifacts
         run: dir artifacts
