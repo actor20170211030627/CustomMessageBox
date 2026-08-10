@@ -49,6 +49,14 @@ jobs:
         run: |
           nuget pack CustomMessageBox/CustomMessageBox.csproj -Properties Configuration=Release -Version ${{ steps.version.outputs.VERSION }} -OutputDirectory artifacts
 
+      # 调试：列出 artifacts 目录内容
+      - name: List files after pack
+        run: |
+          echo "Current directory:"
+          dir
+          echo "Artifacts directory:"
+          if (Test-Path artifacts) { dir artifacts } else { Write-Host "artifacts folder not found" }
+
       - name: NuGet login (OIDC → temp API key)
         id: login
         uses: NuGet/login@v1
@@ -57,6 +65,11 @@ jobs:
 
       - name: Push to NuGet.org
         run: |
-          dotnet nuget push "artifacts/*.nupkg" `
-            --api-key ${{ steps.login.outputs.NUGET_API_KEY }} `
-            --source https://api.nuget.org/v3/index.json
+          # 使用 Get-ChildItem 找到 .nupkg 文件并推送
+          $pkg = Get-ChildItem artifacts\*.nupkg | Select-Object -First 1
+          if ($pkg) {
+            dotnet nuget push $pkg.FullName --api-key ${{ steps.login.outputs.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
+          } else {
+            Write-Error "No .nupkg file found in artifacts folder"
+            exit 1
+          }
