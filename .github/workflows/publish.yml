@@ -7,9 +7,8 @@ on:
 
 jobs:
   build-and-publish:
-    runs-on: windows-latest  # .NET Framework 必须在 Windows 上构建
+    runs-on: windows-latest
 
-    # 关键：授予 OIDC 令牌权限
     permissions:
       id-token: write
       contents: read
@@ -17,48 +16,40 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # 安装 .NET SDK（为了后续的 dotnet nuget push 命令）
       - name: Setup .NET SDK
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '6.0.x'
 
-      # 安装 nuget.exe（用于传统项目打包）
       - name: Install NuGet
         uses: nuget/setup-nuget@v1
         with:
           nuget-version: 'latest'
 
-      # 还原依赖（如有）
       - name: Restore packages
-        run: nuget restore CustomMessageBox.sln  # 如果你的解决方案名不是这个，请修改
+        run: nuget restore CustomMessageBox.sln
 
-      # 编译（Release 模式）
       - name: Build
         run: |
           msbuild CustomMessageBox.sln /p:Configuration=Release /p:Platform="Any CPU"
 
-      # 获取版本号（从标签提取，如 v1.0.0 -> 1.0.0）
       - name: Get version
         id: version
         run: |
-          $VERSION = "${{ github.ref_name }}".Substring(1)  # 去掉前面的 'v'
+          $VERSION = "${{ github.ref_name }}".Substring(1)
           echo "VERSION=$VERSION" >> $env:GITHUB_OUTPUT
         shell: pwsh
 
-      # 使用 nuget.exe 打包（生成 .nupkg）
       - name: Pack with nuget.exe
         run: |
           nuget pack CustomMessageBox.csproj -Properties Configuration=Release -Version ${{ steps.version.outputs.VERSION }} -OutputDirectory artifacts
 
-      # 通过 OIDC 获取 NuGet 临时 API Key（Trusted Publishing）
       - name: NuGet login (OIDC → temp API key)
         id: login
         uses: NuGet/login@v1
         with:
-          user: ${{ secrets.NUGET_USER }}  # 需在 GitHub Secrets 中设置你的 NuGet.org 用户名
+          user: ${{ secrets.NUGET_USER }}
 
-      # 推送包到 NuGet.org
       - name: Push to NuGet.org
         run: |
           dotnet nuget push "artifacts/*.nupkg" `
