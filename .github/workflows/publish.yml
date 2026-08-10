@@ -10,7 +10,7 @@ jobs:
     runs-on: windows-latest
 
     permissions:
-      id-token: write
+      id-token: write   # 允许 OIDC 认证
       contents: read
 
     steps:
@@ -47,29 +47,30 @@ jobs:
       # 关键修改：加上子文件夹路径
       - name: Pack with nuget.exe
         run: |
-          nuget pack CustomMessageBox/CustomMessageBox.csproj -Properties Configuration=Release -Version ${{ steps.version.outputs.VERSION }} -OutputDirectory artifacts
+          nuget pack CustomMessageBox/CustomMessageBox.csproj `
+            -Properties "Configuration=Release;Version=${{ steps.version.outputs.VERSION }}" `
+            -Version ${{ steps.version.outputs.VERSION }} `
+            -OutputDirectory artifacts
 
-      # 调试：列出 artifacts 目录内容
-      - name: List files after pack
-        run: |
-          echo "Current directory:"
-          dir
-          echo "Artifacts directory:"
-          if (Test-Path artifacts) { dir artifacts } else { Write-Host "artifacts folder not found" }
+      - name: List artifacts (debug)
+        run: dir artifacts
 
       - name: NuGet login (OIDC → temp API key)
         id: login
         uses: NuGet/login@v1
         with:
-          user: ${{ secrets.NUGET_USER }}
+          user: ${{ secrets.NUGET_USER }}   # 确保你在 GitHub Secrets 中设置了 NUGET_USER
 
       - name: Push to NuGet.org
         run: |
           # 使用 Get-ChildItem 找到 .nupkg 文件并推送
           $pkg = Get-ChildItem artifacts\*.nupkg | Select-Object -First 1
           if ($pkg) {
-            dotnet nuget push $pkg.FullName --api-key ${{ steps.login.outputs.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
+            Write-Host "Pushing: $($pkg.FullName)"
+            dotnet nuget push $pkg.FullName `
+              --api-key ${{ steps.login.outputs.NUGET_API_KEY }} `
+              --source https://api.nuget.org/v3/index.json
           } else {
-            Write-Error "No .nupkg file found in artifacts folder"
+            Write-Error "No .nupkg found"
             exit 1
           }
