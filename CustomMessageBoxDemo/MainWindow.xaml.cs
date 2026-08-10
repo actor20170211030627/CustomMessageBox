@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using CustomMessageBox.Dialog;
+using Actor.CustomMessageBox;
 
 namespace CustomMessageBoxDemo {
     

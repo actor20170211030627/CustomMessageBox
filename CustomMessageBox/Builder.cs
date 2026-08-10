@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Media;
 
-namespace CustomMessageBox.Dialog {
+namespace Actor.CustomMessageBox {
     public class Builder: IMessageBoxBuilder {
             private readonly Window _owner;
             private readonly string _message;

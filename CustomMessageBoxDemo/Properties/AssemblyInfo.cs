@@ -7,11 +7,11 @@ using System.Windows;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("CustomMessageBox")]
+[assembly: AssemblyTitle("CustomMessageBoxDemo")]
 [assembly: AssemblyDescription("一个可定制的 WPF MessageBox 控件。(A custom MessageBox)")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Fate")]
-[assembly: AssemblyProduct("CustomMessageBox")]
+[assembly: AssemblyProduct("CustomMessageBoxDemo")]
 [assembly: AssemblyCopyright("Copyright ©  2026")]
 [assembly: AssemblyTrademark("https://github.com/actor20170211030627/CustomMessageBox")]
 [assembly: AssemblyCulture("")]
@@ -51,6 +51,6 @@ using System.Windows;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.8")]
-[assembly: AssemblyFileVersion("1.0.0.8")]
-[assembly: AssemblyInformationalVersion("1.0.0.8(202608101850)")]
+[assembly: AssemblyVersion("1.0.0.9")]
+[assembly: AssemblyFileVersion("1.0.0.9")]
+[assembly: AssemblyInformationalVersion("1.0.0.9(202608102151)")]

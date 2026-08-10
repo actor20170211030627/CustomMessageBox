@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Media;
 
-namespace CustomMessageBox.Dialog {
+namespace Actor.CustomMessageBox {
     
     // 内部接口，仅程序集内可见
     internal interface IMessageBoxBuilder {

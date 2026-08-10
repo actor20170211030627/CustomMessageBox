@@ -12,4 +12,4 @@
 ## 3.How to
 To get a Git project into your project:
 
-在 NuGet 中搜索 CustomMessageBox 安装即可(Search CustomMessageBox in NuGet)
+在 NuGet 中搜索 <code>CustomMessageBox.Actor.WPF</code> 安装即可(Search <code>CustomMessageBox.Actor.WPF</code> in NuGet)

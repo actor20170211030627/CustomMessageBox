@@ -5,7 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using CustomMessageBox.Resources;
 
-namespace CustomMessageBox.Dialog {
+namespace Actor.CustomMessageBox {
 
     /// <summary>
     /// 自定义消息框，支持 Builder 模式，使用标准 MessageBoxButton, MessageBoxImage 和 MessageBoxResult

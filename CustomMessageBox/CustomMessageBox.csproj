@@ -8,14 +8,18 @@
         <ProjectGuid>{F699F4BE-6CCA-4CFA-A199-6DA48F6FCE99}</ProjectGuid>
         <OutputType>Library</OutputType>
         <AppDesignerFolder>Properties</AppDesignerFolder>
-        <RootNamespace>CustomMessageBox</RootNamespace>
+        <!-- 更科学的命名空间 -->
+        <RootNamespace>Actor.CustomMessageBox</RootNamespace>
         <AssemblyName>CustomMessageBox</AssemblyName>
         <!-- 目标框架（你的是 .NET Framework 4.6.2） -->
         <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
         <FileAlignment>512</FileAlignment>
 
-        <!-- NuGet 包元数据 -->
-        <PackageId>CustomMessageBox.WPF</PackageId>
+        <!--
+            NuGet 包元数据, 在NuGet中搜索这个名字安装.
+            if 名字和其他人的项目名字重复, Github推送到NuGet的时候可能会导致403错误
+         -->
+        <PackageId>CustomMessageBox.Actor.WPF</PackageId>
         <Version>1.0.0</Version>
         <Authors>Actor</Authors>
         <Company>Fate</Company>
@@ -60,38 +64,38 @@
         <Reference Include="WindowsBase" />
     </ItemGroup>
     <ItemGroup>
-        <Compile Include="Dialog\Builder.cs" />
-        <Compile Include="Dialog\IMessageBoxBuilder.cs" />
-        <Compile Include="Dialog\MessageBox2.xaml.cs">
+        <Compile Include="Builder.cs" />
+        <Compile Include="IMessageBoxBuilder.cs" />
+        <Compile Include="MessageBox2.xaml.cs">
           <DependentUpon>MessageBox2.xaml</DependentUpon>
         </Compile>
         <Compile Include="Properties\AssemblyInfo.cs"/>
         <Compile Include="Resources\Strings.Designer.cs">
-          <DesignTime>True</DesignTime>
-          <AutoGen>True</AutoGen>
-          <DependentUpon>Strings.resx</DependentUpon>
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>Strings.resx</DependentUpon>
         </Compile>
         <Compile Include="Resources\Strings.zh-CN.Designer.cs">
-          <DesignTime>True</DesignTime>
-          <AutoGen>True</AutoGen>
-          <DependentUpon>Strings.zh-CN.resx</DependentUpon>
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>Strings.zh-CN.resx</DependentUpon>
         </Compile>
     </ItemGroup>
     <ItemGroup>
-      <Page Include="Dialog\MessageBox2.xaml" />
-    </ItemGroup>
-    <ItemGroup>
-      <EmbeddedResource Include="Resources\Strings.resx">
-        <Generator>ResXFileCodeGenerator</Generator>
-        <LastGenOutput>Strings.Designer.cs</LastGenOutput>
-      </EmbeddedResource>
-      <EmbeddedResource Include="Resources\Strings.zh-CN.resx">
-        <Generator>ResXFileCodeGenerator</Generator>
-        <LastGenOutput>Strings.zh-CN.Designer.cs</LastGenOutput>
-      </EmbeddedResource>
+        <EmbeddedResource Include="Resources\Strings.resx">
+            <Generator>ResXFileCodeGenerator</Generator>
+            <LastGenOutput>Strings.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Resources\Strings.zh-CN.resx">
+            <Generator>ResXFileCodeGenerator</Generator>
+            <LastGenOutput>Strings.zh-CN.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
     </ItemGroup>
     <ItemGroup>
       <Content Include=".gitignore" />
+    </ItemGroup>
+    <ItemGroup>
+      <Page Include="MessageBox2.xaml" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets"/>
     <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
