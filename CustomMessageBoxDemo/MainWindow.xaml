@@ -28,6 +28,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -114,8 +115,26 @@
             Grid.Column="0"
             Content="4.Window图标(Window Icon):" />
         <ComboBox
-            x:Name="ComboBox_WindowIcon"
+            x:Name="ComboBox_HasWindowIcon"
             Grid.Row="4"
+            Grid.Column="1"
+            VerticalContentAlignment="Center"
+            HorizontalContentAlignment="Center"
+            IsEditable="False"
+            StaysOpenOnEdit="True"
+            SelectedIndex="0">
+            <ComboBoxItem>true(默认Default)</ComboBoxItem>
+            <ComboBoxItem>false</ComboBoxItem>
+        </ComboBox>
+
+
+        <Label
+            Grid.Row="5"
+            Grid.Column="0"
+            Content="5.Window图标(Window Icon):" />
+        <ComboBox
+            x:Name="ComboBox_WindowIcon"
+            Grid.Row="5"
             Grid.Column="1"
             VerticalContentAlignment="Center"
             HorizontalContentAlignment="Center"
@@ -131,7 +150,7 @@
         </ComboBox>
         <ComboBox
             x:Name="ComboBox_Custom_WindowIcon"
-            Grid.Row="4"
+            Grid.Row="5"
             Grid.Column="2"
             IsEditable="False"
             StaysOpenOnEdit="True"
@@ -148,12 +167,12 @@
 
 
         <Label
-            Grid.Row="5"
+            Grid.Row="6"
             Grid.Column="0"
-            Content="5.按钮(Button):" />
+            Content="6.按钮(Button):" />
         <ComboBox
             x:Name="ComboBox_Button"
-            Grid.Row="5"
+            Grid.Row="6"
             Grid.Column="1"
             VerticalContentAlignment="Center"
             HorizontalContentAlignment="Center"
@@ -169,12 +188,12 @@
 
 
         <Label
-            Grid.Row="6"
+            Grid.Row="7"
             Grid.Column="0"
-            Content="6.按钮Min宽度(ButtonMinWidth):" />
+            Content="7.按钮Min宽度(ButtonMinWidth):" />
         <ComboBox
             x:Name="ComboBox_ButtonMinWidth"
-            Grid.Row="6"
+            Grid.Row="7"
             Grid.Column="1"
             VerticalContentAlignment="Center"
             HorizontalContentAlignment="Center"
@@ -189,60 +208,60 @@
 
 
         <Label
-            Grid.Row="7"
+            Grid.Row="8"
             Grid.Column="0"
-            Content="7.按钮Ok显示(Button Ok Text):" />
+            Content="8.按钮Ok显示(Button Ok Text):" />
         <TextBox
             Name="TB_OkText"
-            Grid.Row="7"
+            Grid.Row="8"
             Grid.Column="1"
             Padding="2 2 0 0"
             Text="Okey~" />
 
 
         <Label
-            Grid.Row="8"
+            Grid.Row="9"
             Grid.Column="0"
-            Content="8.按钮Cancel显示(Button Cancel Text):" />
+            Content="9.按钮Cancel显示(Button Cancel Text):" />
         <TextBox
             Name="TB_CancelText"
-            Grid.Row="8"
+            Grid.Row="9"
             Grid.Column="1"
             Padding="2 2 0 0"
             Text="Cancel~" />
 
 
         <Label
-            Grid.Row="9"
+            Grid.Row="10"
             Grid.Column="0"
-            Content="9.按钮Yes显示(Button Yes Text):" />
+            Content="10.按钮Yes显示(Button Yes Text):" />
         <TextBox
             Name="TB_YesText"
-            Grid.Row="9"
+            Grid.Row="10"
             Grid.Column="1"
             Padding="2 2 0 0"
             Text="Yeees~" />
 
 
         <Label
-            Grid.Row="10"
+            Grid.Row="11"
             Grid.Column="0"
-            Content="10.按钮No显示(Button No Text):" />
+            Content="11.按钮No显示(Button No Text):" />
         <TextBox
             Name="TB_NoText"
-            Grid.Row="10"
+            Grid.Row="11"
             Grid.Column="1"
             Padding="2 2 0 0"
             Text="Nooo~" />
 
 
         <Label
-            Grid.Row="11"
+            Grid.Row="12"
             Grid.Column="0"
-            Content="11.按Enter时默认值(DefaultResult):" />
+            Content="12.按Enter时默认值(DefaultResult):" />
         <ComboBox
             x:Name="ComboBox_DefaultResult"
-            Grid.Row="11"
+            Grid.Row="12"
             Grid.Column="1"
             VerticalContentAlignment="Center"
             HorizontalContentAlignment="Center"
@@ -259,7 +278,7 @@
 
         <Button
             Name="Btn_Show"
-            Grid.Row="12"
+            Grid.Row="13"
             Grid.Column="0"
             Grid.ColumnSpan="2"
             Width="200"
@@ -270,12 +289,12 @@
 
 
         <Label
-            Grid.Row="13"
+            Grid.Row="14"
             Grid.Column="0"
             Content="结果(Result):" />
         <TextBlock
             Name="TB_Result"
-            Grid.Row="13"
+            Grid.Row="14"
             Grid.Column="1"
             Foreground="Red"
             Padding="0 10 0 10" />

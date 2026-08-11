@@ -2,12 +2,14 @@
 using System.Windows.Media;
 
 namespace Actor.CustomMessageBox {
+
+    /// <summary>Builder 模式 </summary>
     public class Builder: IMessageBoxBuilder {
             private readonly Window _owner;
             private readonly string _message;
             private string _title;
             private MessageBoxButton _button = MessageBoxButton.OK;
-            private bool _hasButtons = true;
+            private bool _hasButtons = true, _hasWindowIcon = true;
             private double _buttonMinWidth = 75;
             private MessageBoxImage _standardIcon = MessageBoxImage.None;
             private MessageBoxImage _windowIcon = MessageBoxImage.None;
@@ -15,9 +17,14 @@ namespace Actor.CustomMessageBox {
             private MessageBoxResult _defaultResult = MessageBoxResult.None;
             private string _okText, _cancelText, _yesText, _noText;
 
+            /// <summary>创建Builder</summary>
+            /// <param name="message">显示内容</param>
             public Builder(string message) {
                 this._message = message;
             }
+            /// <summary>创建Builder</summary>
+            /// <param name="owner">当前Window, 没有就不要传</param>
+            /// <param name="message">显示内容</param>
             public Builder(Window owner, string message) {
                 this._owner = owner;
                 this._message = message;
@@ -75,8 +82,8 @@ namespace Actor.CustomMessageBox {
 
             /// <summary>设置自定义图标</summary>
             /// <param name="icon">
-            ///     System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
-            ///     string AssemblyName = assembly.GetName().Name;
+            ///     System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();<br />
+            ///     string AssemblyName = assembly.GetName().Name;<br />
             ///     Uri uri = new Uri($"pack://application:,,,/{AssemblyName};component/Resources/Images/xxx.png");<br />
             ///     var icon = new System.Windows.Media.Imaging.BitmapImage(uri);
             /// </param>
@@ -108,19 +115,27 @@ namespace Actor.CustomMessageBox {
                 return this;
             }
 
+            /// <summary>设置是否显示窗口↖️角的Icon, 默认true, 并显示App的icon</summary>
+            /// <param name="hasWindowIcon"></param>
+            /// <returns></returns>
+            public Builder SetHasWindowIcon(bool hasWindowIcon) {
+                this._hasWindowIcon = hasWindowIcon;
+                return this;
+            }
+
             /// <summary>设置窗口↖️角的Icon</summary>
             /// <param name="windowIcon"></param>
             /// <returns></returns>
             public Builder SetWindowIcon(MessageBoxImage windowIcon) {
-                this._windowIcon = windowIcon; 
+                this._windowIcon = windowIcon;
                 this._customWindowIcon = null;
                 return this;
             }
 
             /// <summary>设置窗口↖️角的Icon</summary>
             /// <param name="windowIcon">
-            ///     System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
-            ///     string AssemblyName = assembly.GetName().Name;
+            ///     System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();<br />
+            ///     string AssemblyName = assembly.GetName().Name;<br />
             ///     Uri uri = new Uri($"pack://application:,,,/{AssemblyName};component/Resources/Images/xxx.png");<br />
             ///     var icon = new System.Windows.Media.Imaging.BitmapImage(uri);
             /// </param>
@@ -150,10 +165,24 @@ namespace Actor.CustomMessageBox {
             /// <param name="text"></param>
             /// <returns></returns>
             public Builder SetOkText(string text) { this._okText = text; return this; }
+
+            /// <summary>给"Cancel"按钮设置自定义文本</summary>
+            /// <param name="text"></param>
+            /// <returns></returns>
             public Builder SetCancelText(string text) { this._cancelText = text; return this; }
+
+            /// <summary>给"Yes"按钮设置自定义文本</summary>
+            /// <param name="text"></param>
+            /// <returns></returns>
             public Builder SetYesText(string text) { this._yesText = text; return this; }
+
+            /// <summary>给"No"按钮设置自定义文本</summary>
+            /// <param name="text"></param>
+            /// <returns></returns>
             public Builder SetNoText(string text) { this._noText = text; return this; }
 
+            /// <summary>创建MessageBox2对象</summary>
+            /// <returns></returns>
             public MessageBox2 Build() {
                 return new MessageBox2(this);
             }
@@ -168,6 +197,7 @@ namespace Actor.CustomMessageBox {
             double IMessageBoxBuilder.ButtonMinWidth => _buttonMinWidth;
             MessageBoxImage IMessageBoxBuilder.StandardIcon => _standardIcon;
             ImageSource IMessageBoxBuilder.CustomIcon => _customIcon;
+            bool IMessageBoxBuilder.HasWindowIcon => _hasWindowIcon;
             MessageBoxImage IMessageBoxBuilder.WindowIcon => _windowIcon;
             ImageSource IMessageBoxBuilder.CustomWindowIcon => _customWindowIcon;
             MessageBoxResult IMessageBoxBuilder.DefaultResult => _defaultResult;

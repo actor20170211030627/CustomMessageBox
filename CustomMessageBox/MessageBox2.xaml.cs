@@ -28,14 +28,16 @@ namespace Actor.CustomMessageBox {
             this._owner = data.Owner;
 
             //设置Window↖️角的icon
-            if (data.WindowIcon == MessageBoxImage.None && data.CustomWindowIcon == null) {
-                // 使用工具窗口样式（无图标占位，更紧凑）
-                this.WindowStyle = WindowStyle.ToolWindow;
-            } else {
+            if (data.HasWindowIcon) {
                 this.WindowStyle = WindowStyle.SingleBorderWindow;
                 if (data.CustomWindowIcon != null) {
                     this.Icon = data.CustomWindowIcon;
-                } else this.Icon = GetStandardIconImageSource(data.WindowIcon);
+                } else if (data.WindowIcon != MessageBoxImage.None) {
+                    this.Icon = GetStandardIconImageSource(data.WindowIcon);
+                }
+            } else {
+                // 使用工具窗口样式（无图标占位，更紧凑）
+                this.WindowStyle = WindowStyle.ToolWindow;
             }
 
             //Title不能传null, 否则报错: System.ArgumentException: “”不是属性“Title”的有效值。

@@ -13,6 +13,7 @@ namespace Actor.CustomMessageBox {
         double ButtonMinWidth { get; }
         MessageBoxImage StandardIcon { get; }
         ImageSource CustomIcon { get; }
+        bool HasWindowIcon { get; }
         MessageBoxImage WindowIcon { get; }
         ImageSource CustomWindowIcon { get; }
         MessageBoxResult DefaultResult { get; }

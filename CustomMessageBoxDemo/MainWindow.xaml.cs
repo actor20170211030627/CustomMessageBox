@@ -56,6 +56,7 @@ namespace CustomMessageBoxDemo {
                 }
                 
                 //设置Window图标
+                builder.SetHasWindowIcon(this.ComboBox_HasWindowIcon.SelectedIndex == 0);
                 int imageIndexWindow = this.ComboBox_WindowIcon.SelectedIndex;
                 if (imageIndexWindow <= 4) {
                     builder.SetWindowIcon(GetIcon(this.ComboBox_WindowIcon.SelectedIndex));
