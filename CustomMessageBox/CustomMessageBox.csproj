@@ -30,6 +30,9 @@
         <PackageTags>wpf;messagebox;dialog;custom</PackageTags>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageOutputPath>$(MSBuildProjectDirectory)\nupkgs</PackageOutputPath>
+        <!-- 生成注释文档xml -->
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
