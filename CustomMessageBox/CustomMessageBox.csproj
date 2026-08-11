@@ -44,6 +44,8 @@
         <DefineConstants>DEBUG;TRACE</DefineConstants>
         <ErrorReport>prompt</ErrorReport>
         <WarningLevel>4</WarningLevel>
+        <!-- 需要设置注释文档xml生成位置, 否则会生成到项目根目录: CustomMessageBox\CustomMessageBox -->
+        <DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
         <PlatformTarget>AnyCPU</PlatformTarget>
@@ -53,6 +55,8 @@
         <DefineConstants>TRACE</DefineConstants>
         <ErrorReport>prompt</ErrorReport>
         <WarningLevel>4</WarningLevel>
+        <!-- 需要设置注释文档xml生成位置, 否则会生成到项目根目录: CustomMessageBox\CustomMessageBox -->
+        <DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
     </PropertyGroup>
     
     <!-- Add dependencies 添加依赖 -->
