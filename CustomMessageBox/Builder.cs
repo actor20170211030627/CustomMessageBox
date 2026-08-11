@@ -75,6 +75,8 @@ namespace Actor.CustomMessageBox {
 
             /// <summary>设置自定义图标</summary>
             /// <param name="icon">
+            ///     System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
+            ///     string AssemblyName = assembly.GetName().Name;
             ///     Uri uri = new Uri($"pack://application:,,,/{AssemblyName};component/Resources/Images/xxx.png");<br />
             ///     var icon = new System.Windows.Media.Imaging.BitmapImage(uri);
             /// </param>
@@ -117,6 +119,8 @@ namespace Actor.CustomMessageBox {
 
             /// <summary>设置窗口↖️角的Icon</summary>
             /// <param name="windowIcon">
+            ///     System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
+            ///     string AssemblyName = assembly.GetName().Name;
             ///     Uri uri = new Uri($"pack://application:,,,/{AssemblyName};component/Resources/Images/xxx.png");<br />
             ///     var icon = new System.Windows.Media.Imaging.BitmapImage(uri);
             /// </param>

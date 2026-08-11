@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using CustomMessageBox.Resources;
+using Actor.CustomMessageBox.Resources;
 
 namespace Actor.CustomMessageBox {
 

@@ -92,10 +92,13 @@
         <EmbeddedResource Include="Resources\Strings.resx">
             <Generator>ResXFileCodeGenerator</Generator>
             <LastGenOutput>Strings.Designer.cs</LastGenOutput>
+            <!-- 强制生成的资源名称不带'Actor.'前缀, 否则Strings.cs中的ResourceManager初始化的时候没有'Actor.'前缀会找不到 -->
+<!--            <LogicalName>CustomMessageBox.Resources.Strings.resources</LogicalName>-->
         </EmbeddedResource>
         <EmbeddedResource Include="Resources\Strings.zh-CN.resx">
             <Generator>ResXFileCodeGenerator</Generator>
             <LastGenOutput>Strings.zh-CN.Designer.cs</LastGenOutput>
+<!--            <LogicalName>CustomMessageBox.Resources.Strings.zh-CN.resources</LogicalName>-->
         </EmbeddedResource>
     </ItemGroup>
     <ItemGroup>
