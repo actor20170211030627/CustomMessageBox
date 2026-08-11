@@ -12,17 +12,21 @@
         <icon>Snipaste_2026-08-10_14-50-55.png</icon>
         <!-- 这个标签指定包内的 README 文件路径，不涉及源文件路径 -->
         <readme>README.md</readme>
-        <description>一个可高度自定义的 WPF MessageBox 控件，支持按钮文字自定义、图标自定义、多语言等。</description>
+        <!-- 显示在NuGet搜索结果的Info那儿 -->
+        <description>
+            A highly customizable WPF MessageBox control, supporting custom button text, custom icons, multi-language, etc.&#10;
+            一个可高度自定义的 WPF MessageBox 控件，支持按钮文字自定义、图标自定义、多语言等。
+        </description>
         <tags>wpf messagebox dialog custom</tags>
         <copyright>Copyright © Actor 2026</copyright>
-        <releaseNotes>初始版本发布：支持自定义按钮、图标、多语言、Builder 模式。</releaseNotes>
+        <releaseNotes>更新版本发布：支持自定义按钮、图标、多语言、Builder 模式。</releaseNotes>
     </metadata>
     <files>
         <file src="bin\Release\CustomMessageBox.dll" target="lib\net462" />
         <!-- 如果有 XML 注释文件 -->
 <!--        <file src="bin\Release\CustomMessageBox.xml" target="lib\net462" />-->
         <file src="..\captures\Snipaste_2026-08-10_14-50-55.png" target="" />
-        <file src="..\README.md" target="" />
+        <file src="README.md" target="" />
     </files>
     
     <!--
