@@ -2,7 +2,7 @@
 <package>
     <metadata>
         <id>CustomMessageBox.Actor.WPF</id>
-        <version>1.0.2.0</version>
+        <version>1.0.3.0</version>
         <title>Custom WPF MessageBox</title>
         <authors>Actor</authors>
         <owners>Actor</owners>

@@ -9,13 +9,14 @@ namespace Actor.CustomMessageBox {
             private readonly string _message;
             private string _title;
             private MessageBoxButton _button = MessageBoxButton.OK;
-            private bool _hasButtons = true, _hasWindowIcon = true;
+            private bool _hasWindowIcon = true, _enableCloseBtn = true, _hasButtons = true;
+            private bool _closeOnClickOk = true, _closeOnClickCancel = true, _closeOnClickYes = true, _closeOnClickNo = true, _closeOnPressedEsc = true;
             private double _buttonMinWidth = 75;
             private MessageBoxImage _standardIcon = MessageBoxImage.None;
             private MessageBoxImage _windowIcon = MessageBoxImage.None;
             private ImageSource _customIcon, _customWindowIcon;
             private MessageBoxResult _defaultResult = MessageBoxResult.None;
-            private string _okText, _cancelText, _yesText, _noText;
+            private object _okText, _cancelText, _yesText, _noText;
 
             /// <summary>创建Builder</summary>
             /// <param name="message">显示内容</param>
@@ -30,34 +31,48 @@ namespace Actor.CustomMessageBox {
                 this._message = message;
             }
 
+            /// <summary>设置是否显示窗口↖️角的Icon, 默认true, 并显示App的icon</summary>
+            /// <param name="hasWindowIcon"></param>
+            public Builder SetHasWindowIcon(bool hasWindowIcon) {
+                this._hasWindowIcon = hasWindowIcon;
+                return this;
+            }
+
+            /// <summary>设置窗口↖️角的Icon</summary>
+            /// <param name="windowIcon"></param>
+            public Builder SetWindowIcon(MessageBoxImage windowIcon) {
+                this._windowIcon = windowIcon;
+                this._customWindowIcon = null;
+                return this;
+            }
+
+            /// <summary>设置窗口↖️角的Icon</summary>
+            /// <param name="windowIcon">
+            ///     System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();<br />
+            ///     string AssemblyName = assembly.GetName().Name;<br />
+            ///     Uri uri = new Uri($"pack://application:,,,/{AssemblyName};component/Resources/Images/xxx.png");<br />
+            ///     var icon = new System.Windows.Media.Imaging.BitmapImage(uri);
+            /// </param>
+            public Builder SetWindowIcon(ImageSource windowIcon) {
+                this._windowIcon = MessageBoxImage.None;
+                this._customWindowIcon = windowIcon;
+                return this;
+            }
+
             /// <summary>设置标题</summary>
             /// <param name="caption">弹框顶部标题</param>
-            /// <returns></returns>
             public Builder SetCaption(string caption) => SetTitle(caption);
 
             /// <summary>
             /// 设置标题
             /// </summary>
             /// <param name="title">弹框顶部标题</param>
-            /// <returns></returns>
             public Builder SetTitle(string title) { this._title = title; return this; }
-            
-            /// <summary>设置按钮</summary>
-            /// <param name="button"><see cref="T:System.Windows.MessageBoxButton" /> 按钮类型, 例: <see cref="F:System.Windows.MessageBoxButton.YesNo">MessageBoxButton.YesNo</see></param>
-            /// <returns></returns>
-            public Builder SetButton(MessageBoxButton button) { this._button = button; return this; }
-            
-            /// <summary>设置是否有按钮, 默认True</summary>
-            /// <returns></returns>
-            public Builder SetHasButtons(bool hasButtons) { this._hasButtons = hasButtons; return this; }
 
-            /// <summary>
-            /// 设置Button最小宽度
-            /// </summary>
-            /// <param name="minWidth">Button最小宽度</param>
-            /// <returns></returns>
-            public Builder SetButtonMinWidth(double minWidth) {
-                this._buttonMinWidth = minWidth;
+            /// <summary>设置↗️角的❌️按钮是否能点击, 默认true</summary>
+            /// <param name="enableCloseBtn"></param>
+            public Builder SetEnableCloseBtn(bool enableCloseBtn) {
+                this._enableCloseBtn = enableCloseBtn;
                 return this;
             }
 
@@ -73,7 +88,6 @@ namespace Actor.CustomMessageBox {
             ///     <see cref="F:System.Windows.MessageBoxImage.Asterisk">MessageBoxImage.Asterisk</see> <br />
             ///     <see cref="F:System.Windows.MessageBoxImage.Information">MessageBoxImage.Information</see> <br />
             /// </param>
-            /// <returns></returns>
             public Builder SetIcon(MessageBoxImage icon) { 
                 this._standardIcon = icon; 
                 this._customIcon = null;
@@ -87,11 +101,26 @@ namespace Actor.CustomMessageBox {
             ///     Uri uri = new Uri($"pack://application:,,,/{AssemblyName};component/Resources/Images/xxx.png");<br />
             ///     var icon = new System.Windows.Media.Imaging.BitmapImage(uri);
             /// </param>
-            /// <returns></returns>
             public Builder SetIcon(ImageSource icon) {
                 this._customIcon = icon; 
                 this._standardIcon = MessageBoxImage.None;
                 return this; 
+            }
+
+            /// <summary>设置是否有按钮, 默认True</summary>
+            public Builder SetHasButtons(bool hasButtons) { this._hasButtons = hasButtons; return this; }
+
+            /// <summary>设置按钮</summary>
+            /// <param name="button"><see cref="T:System.Windows.MessageBoxButton" /> 按钮类型, 例: <see cref="F:System.Windows.MessageBoxButton.YesNo">MessageBoxButton.YesNo</see></param>
+            public Builder SetButton(MessageBoxButton button) { this._button = button; return this; }
+
+            /// <summary>
+            /// 设置Button最小宽度
+            /// </summary>
+            /// <param name="minWidth">Button最小宽度</param>
+            public Builder SetButtonMinWidth(double minWidth) {
+                this._buttonMinWidth = minWidth;
+                return this;
             }
 
             /// <summary>
@@ -109,40 +138,54 @@ namespace Actor.CustomMessageBox {
             ///     <see cref="F:System.Windows.MessageBoxResult.Yes">MessageBoxResult.Yes</see> <br />
             ///     <see cref="F:System.Windows.MessageBoxResult.No">MessageBoxResult.No</see>
             /// </param>
-            /// <returns></returns>
             public Builder SetDefaultResult(MessageBoxResult defaultResult) {
                 this._defaultResult = defaultResult;
                 return this;
             }
 
-            /// <summary>设置是否显示窗口↖️角的Icon, 默认true, 并显示App的icon</summary>
-            /// <param name="hasWindowIcon"></param>
-            /// <returns></returns>
-            public Builder SetHasWindowIcon(bool hasWindowIcon) {
-                this._hasWindowIcon = hasWindowIcon;
+            /// <summary>给"Ok"按钮设置自定义文本</summary>
+            /// <param name="text"></param>
+            public Builder SetOkText(object text) { this._okText = text; return this; }
+
+            /// <summary>设置点击"Ok"的时候, 是否关闭弹框, 默认true</summary>
+            public Builder SetCloseOnClickOk(bool closeOnClickOk) {
+                this._closeOnClickOk = closeOnClickOk;
                 return this;
             }
 
-            /// <summary>设置窗口↖️角的Icon</summary>
-            /// <param name="windowIcon"></param>
-            /// <returns></returns>
-            public Builder SetWindowIcon(MessageBoxImage windowIcon) {
-                this._windowIcon = windowIcon;
-                this._customWindowIcon = null;
+            /// <summary>给"Cancel"按钮设置自定义文本</summary>
+            /// <param name="text"></param>
+            public Builder SetCancelText(object text) { this._cancelText = text; return this; }
+
+            /// <summary>设置点击"Cancel"的时候, 是否关闭弹框, 默认true</summary>
+            public Builder SetCloseOnClickCancel(bool closeOnClickCancel) {
+                this._closeOnClickCancel = closeOnClickCancel;
                 return this;
             }
 
-            /// <summary>设置窗口↖️角的Icon</summary>
-            /// <param name="windowIcon">
-            ///     System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();<br />
-            ///     string AssemblyName = assembly.GetName().Name;<br />
-            ///     Uri uri = new Uri($"pack://application:,,,/{AssemblyName};component/Resources/Images/xxx.png");<br />
-            ///     var icon = new System.Windows.Media.Imaging.BitmapImage(uri);
-            /// </param>
-            /// <returns></returns>
-            public Builder SetWindowIcon(ImageSource windowIcon) {
-                this._windowIcon = MessageBoxImage.None;
-                this._customWindowIcon = windowIcon;
+            /// <summary>给"Yes"按钮设置自定义文本</summary>
+            /// <param name="text"></param>
+            public Builder SetYesText(object text) { this._yesText = text; return this; }
+
+            /// <summary>设置点击"Yes"的时候, 是否关闭弹框, 默认true</summary>
+            public Builder SetCloseOnClickYes(bool closeOnClickYes) {
+                this._closeOnClickYes = closeOnClickYes;
+                return this;
+            }
+
+            /// <summary>给"No"按钮设置自定义文本</summary>
+            /// <param name="text"></param>
+            public Builder SetNoText(object text) { this._noText = text; return this; }
+
+            /// <summary>设置点击"No"的时候, 是否关闭弹框, 默认true</summary>
+            public Builder SetCloseOnClickNo(bool closeOnClickNo) {
+                this._closeOnClickNo = closeOnClickNo;
+                return this;
+            }
+
+            /// <summary>设置按下"Esc"的时候, 是否关闭弹框, 默认true</summary>
+            public Builder SetCloseOnPressedEsc(bool closeOnPressedEsc) {
+                this._closeOnPressedEsc = closeOnPressedEsc;
                 return this;
             }
 
@@ -154,35 +197,13 @@ namespace Actor.CustomMessageBox {
             ///     <see cref="F:System.Windows.MessageBoxOptions.RightAlign">MessageBoxOptions.RightAlign</see> <br />
             ///     <see cref="F:System.Windows.MessageBoxOptions.RtlReading">MessageBoxOptions.RtlReading</see>
             /// </param>
-            /// <returns></returns>
             [System.Obsolete(message: "方法未实现(Method not implemented)", error: false)]
             public Builder SetOptions(MessageBoxOptions options) {
                 // this._options = options;
                 return this;
             }
 
-            /// <summary>给"Ok"按钮设置自定义文本</summary>
-            /// <param name="text"></param>
-            /// <returns></returns>
-            public Builder SetOkText(string text) { this._okText = text; return this; }
-
-            /// <summary>给"Cancel"按钮设置自定义文本</summary>
-            /// <param name="text"></param>
-            /// <returns></returns>
-            public Builder SetCancelText(string text) { this._cancelText = text; return this; }
-
-            /// <summary>给"Yes"按钮设置自定义文本</summary>
-            /// <param name="text"></param>
-            /// <returns></returns>
-            public Builder SetYesText(string text) { this._yesText = text; return this; }
-
-            /// <summary>给"No"按钮设置自定义文本</summary>
-            /// <param name="text"></param>
-            /// <returns></returns>
-            public Builder SetNoText(string text) { this._noText = text; return this; }
-
             /// <summary>创建MessageBox2对象</summary>
-            /// <returns></returns>
             public MessageBox2 Build() {
                 return new MessageBox2(this);
             }
@@ -198,12 +219,18 @@ namespace Actor.CustomMessageBox {
             MessageBoxImage IMessageBoxBuilder.StandardIcon => _standardIcon;
             ImageSource IMessageBoxBuilder.CustomIcon => _customIcon;
             bool IMessageBoxBuilder.HasWindowIcon => _hasWindowIcon;
+            bool IMessageBoxBuilder.EnableCloseBtn => _enableCloseBtn;
             MessageBoxImage IMessageBoxBuilder.WindowIcon => _windowIcon;
             ImageSource IMessageBoxBuilder.CustomWindowIcon => _customWindowIcon;
             MessageBoxResult IMessageBoxBuilder.DefaultResult => _defaultResult;
-            string IMessageBoxBuilder.OkText => _okText;
-            string IMessageBoxBuilder.CancelText => _cancelText;
-            string IMessageBoxBuilder.YesText => _yesText;
-            string IMessageBoxBuilder.NoText => _noText;
+            object IMessageBoxBuilder.OkText => _okText;
+            bool IMessageBoxBuilder.CloseOnClickOk => _closeOnClickOk;
+            object IMessageBoxBuilder.CancelText => _cancelText;
+            bool IMessageBoxBuilder.CloseOnClickCancel => _closeOnClickCancel;
+            object IMessageBoxBuilder.YesText => _yesText;
+            bool IMessageBoxBuilder.CloseOnClickYes => _closeOnClickYes;
+            object IMessageBoxBuilder.NoText => _noText;
+            bool IMessageBoxBuilder.CloseOnClickNo => _closeOnClickNo;
+            bool IMessageBoxBuilder.CloseOnPressedEsc => _closeOnPressedEsc;
     }
 }

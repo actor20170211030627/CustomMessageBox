@@ -4,8 +4,8 @@ using System.Windows.Controls;
 using Actor.CustomMessageBox;
 
 namespace CustomMessageBoxDemo {
-    
-    public partial class MainWindow {
+
+    public partial class MainWindow: Window {
 
         private readonly string _assemblyName;
 
@@ -33,60 +33,79 @@ namespace CustomMessageBoxDemo {
         private void OnBtnClick(object sender, RoutedEventArgs routedEventArgs) {
             if (!(sender is Button button)) return;
             string name = button.Name;
-            
+
+            Builder builder = MessageBox2.NewBuilder(this, this.TB_Message.Text);
+
+            //设置Window Icon
+            builder.SetHasWindowIcon(this.ComboBox_HasWindowIcon.SelectedIndex == 0);
+            int imageIndexWindow = this.ComboBox_WindowIcon.SelectedIndex;
+            if (imageIndexWindow <= 4) {
+                builder.SetWindowIcon(GetIcon(this.ComboBox_WindowIcon.SelectedIndex));
+            } else if (imageIndexWindow == 5) {
+                Uri uri;
+                if (this.ComboBox_Custom_WindowIcon.SelectedIndex == 0) {
+                    uri = new Uri($"pack://application:,,,/{_assemblyName};component/Resources/Images/icon_switch_green2.png");
+                } else {
+                    uri = new Uri($"pack://application:,,,/{_assemblyName};component/Resources/Images/icon_switch_lightyellow.png");
+                }
+                var icon = new System.Windows.Media.Imaging.BitmapImage(uri);
+                builder.SetWindowIcon(icon);
+            }
+
+            //设置Title
+            builder.SetCaption(this.TB_Title.Text)
+                // .SetTitle(this.TB_Title.Text)    //和上面一样的
+
+                //设置关闭按钮❌️
+                .SetEnableCloseBtn(this.ComboBox_EnableCloseBtn.SelectedIndex == 0)
+                //设置Esc
+                .SetCloseOnPressedEsc(this.ComboBox_CloseOnPressedEsc.SelectedIndex == 0)
+                ;
+
+            //设置Icon
+            int imageIndex = this.ComboBox_Icon.SelectedIndex;
+            if (imageIndex <= 4) {
+                builder.SetIcon(GetIcon(this.ComboBox_Icon.SelectedIndex));
+            } else if (imageIndex == 5) {
+                Uri uri;
+                if (this.ComboBox_Custom_Icon.SelectedIndex == 0) {
+                    uri = new Uri($"pack://application:,,,/{_assemblyName};component/Resources/Images/icon_switch_green2.png");
+                } else {
+                    uri = new Uri($"pack://application:,,,/{_assemblyName};component/Resources/Images/icon_switch_lightyellow.png");
+                }
+                var icon = new System.Windows.Media.Imaging.BitmapImage(uri);
+                builder.SetIcon(icon);
+            }
+
+            //设置Button
+            MessageBox2 messageBox2 = builder
+                .SetHasButtons(this.ComboBox_Button.SelectedIndex < 4)
+                .SetButton(GetButton(this.ComboBox_Button.SelectedIndex))
+                .SetButtonMinWidth(GetButtonMinWidth(this.ComboBox_ButtonMinWidth.SelectedIndex))
+                //设置按钮文字 & 按下后是否关闭弹窗
+                .SetOkText(this.TB_OkText.Text)
+                .SetCloseOnClickOk(this.ComboBox_CloseOnClickOk.SelectedIndex == 0)
+                .SetCancelText(this.TB_CancelText.Text)
+                .SetCloseOnClickCancel(this.ComboBox_CloseOnClickCancel.SelectedIndex == 0)
+                .SetYesText(this.TB_YesText.Text)
+                .SetCloseOnClickYes(this.ComboBox_CloseOnClickYes.SelectedIndex == 0)
+                .SetNoText(this.TB_NoText.Text)
+                .SetCloseOnClickNo(this.ComboBox_CloseOnClickNo.SelectedIndex == 0)
+
+                //设置按下Enter时的默认值
+                .SetDefaultResult(GetDefaultResult(this.ComboBox_DefaultResult.SelectedIndex))
+                //
+                .SetOptions(MessageBoxOptions.DefaultDesktopOnly)
+                .Build();
+
+            //Show
+            this.TB_Result.Text = "";
             if (name == this.Btn_Show.Name) {
-                Builder builder = MessageBox2.NewBuilder(this.TB_Message.Text)
-                    .SetCaption(this.TB_Title.Text)
-                    // .SetTitle(this.TB_Title.Text)    //和上面一样的
-                    ;
-
-                //设置图标
-                int imageIndex = this.ComboBox_Icon.SelectedIndex;
-                if (imageIndex <= 4) {
-                    builder.SetIcon(GetIcon(this.ComboBox_Icon.SelectedIndex));
-                } else if (imageIndex == 5) {
-                    Uri uri;
-                    if (this.ComboBox_Custom_Icon.SelectedIndex == 0) {
-                        uri = new Uri($"pack://application:,,,/{_assemblyName};component/Resources/Images/icon_switch_green2.png");
-                    } else {
-                        uri = new Uri($"pack://application:,,,/{_assemblyName};component/Resources/Images/icon_switch_lightyellow.png");
-                    }
-                    var icon = new System.Windows.Media.Imaging.BitmapImage(uri);
-                    builder.SetIcon(icon);
-                }
-                
-                //设置Window图标
-                builder.SetHasWindowIcon(this.ComboBox_HasWindowIcon.SelectedIndex == 0);
-                int imageIndexWindow = this.ComboBox_WindowIcon.SelectedIndex;
-                if (imageIndexWindow <= 4) {
-                    builder.SetWindowIcon(GetIcon(this.ComboBox_WindowIcon.SelectedIndex));
-                } else if (imageIndexWindow == 5) {
-                    Uri uri;
-                    if (this.ComboBox_Custom_WindowIcon.SelectedIndex == 0) {
-                        uri = new Uri($"pack://application:,,,/{_assemblyName};component/Resources/Images/icon_switch_green2.png");
-                    } else {
-                        uri = new Uri($"pack://application:,,,/{_assemblyName};component/Resources/Images/icon_switch_lightyellow.png");
-                    }
-                    var icon = new System.Windows.Media.Imaging.BitmapImage(uri);
-                    builder.SetWindowIcon(icon);
-                }
-                
-                //设置按钮
-                MessageBoxResult result = builder
-                    .SetHasButtons(this.ComboBox_Button.SelectedIndex < 4)
-                    .SetButton(GetButton(this.ComboBox_Button.SelectedIndex))
-                    .SetButtonMinWidth(GetButtonMinWidth(this.ComboBox_ButtonMinWidth.SelectedIndex))
-                    //
-                    .SetOptions(MessageBoxOptions.DefaultDesktopOnly)
-                    //设置按钮文字
-                    .SetOkText(this.TB_OkText.Text)
-                    .SetCancelText(this.TB_CancelText.Text)
-                    .SetYesText(this.TB_YesText.Text)
-                    .SetNoText(this.TB_NoText.Text)
-                    .SetDefaultResult(GetDefaultResult(this.ComboBox_DefaultResult.SelectedIndex))
-                    .Build()
-                    .Show();
-
+                messageBox2.Show(onBtnClick: result => {
+                    this.TB_Result.Text = $"result = {result}";
+                });
+            } else if (name == this.Btn_ShowDialog.Name) {
+                MessageBoxResult result = messageBox2.ShowDialog();
                 this.TB_Result.Text = $"result = {result}";
             }
         }

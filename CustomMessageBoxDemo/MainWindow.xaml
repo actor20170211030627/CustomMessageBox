@@ -29,6 +29,8 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -40,7 +42,7 @@
         <TextBlock
             Grid.Row="0"
             Grid.Column="0"
-            Grid.ColumnSpan="5"
+            Grid.ColumnSpan="4"
             Foreground="White"
             Background="LightSkyBlue"
             FontSize="13"
@@ -51,72 +53,10 @@
         <Label
             Grid.Row="1"
             Grid.Column="0"
-            Content="1.标题(Caption):" />
-        <TextBox
-            Name="TB_Title"
-            Grid.Row="1"
-            Grid.Column="1"
-            Padding="2 2 0 0"
-            MinWidth="300"
-            Text="这是标题(This is Title~)" />
-
-        <Label
-            Grid.Row="2"
-            Grid.Column="0"
-            Content="2.内容(Message):" />
-        <TextBox
-            Name="TB_Message"
-            Grid.Row="2"
-            Grid.Column="1"
-            Padding="2 2 0 0"
-            Text="This is Message~" />
-
-
-        <Label
-            Grid.Row="3"
-            Grid.Column="0"
-            Content="3.图标(Icon):" />
-        <ComboBox
-            x:Name="ComboBox_Icon"
-            Grid.Row="3"
-            Grid.Column="1"
-            VerticalContentAlignment="Center"
-            HorizontalContentAlignment="Center"
-            IsEditable="False"
-            StaysOpenOnEdit="True"
-            SelectedIndex="0">
-            <ComboBoxItem>MessageBoxImage.None</ComboBoxItem>
-            <ComboBoxItem>MessageBoxImage.Error(❌️Hand, Stop)</ComboBoxItem>
-            <ComboBoxItem>MessageBoxImage.Question ❓️</ComboBoxItem>
-            <ComboBoxItem>MessageBoxImage.Exclamation(⚠️Warning)</ComboBoxItem>
-            <ComboBoxItem>MessageBoxImage.Asterisk(❕️ Information)</ComboBoxItem>
-            <ComboBoxItem>Custom Icon(自定义图标)</ComboBoxItem>
-        </ComboBox>
-        <ComboBox
-            x:Name="ComboBox_Custom_Icon"
-            Grid.Row="3"
-            Grid.Column="2"
-            IsEditable="False"
-            StaysOpenOnEdit="True"
-            VerticalContentAlignment="Center"
-            SelectedIndex="0">
-            <ComboBoxItem>
-                <Image Source="pack://application:,,,/Resources/Images/icon_switch_green2.png" Width="34" Height="15" />
-            </ComboBoxItem>
-            <ComboBoxItem>
-                <Image Source="pack://application:,,,/Resources/Images/icon_switch_lightyellow.png" Width="34"
-                       Height="15" />
-            </ComboBoxItem>
-        </ComboBox>
-
-
-        <Label
-            Grid.Row="4"
-            Grid.Column="0"
-            Content="4.Window图标(Window Icon):" />
+            Content="1.是否显示↖️Window图标(Window Icon Show):" />
         <ComboBox
             x:Name="ComboBox_HasWindowIcon"
-            Grid.Row="4"
+            Grid.Row="1"
             Grid.Column="1"
             VerticalContentAlignment="Center"
             HorizontalContentAlignment="Center"
@@ -129,12 +69,12 @@
 
 
         <Label
-            Grid.Row="5"
+            Grid.Row="2"
             Grid.Column="0"
-            Content="5.Window图标(Window Icon):" />
+            Content="2.Window图标(Window Icon):" />
         <ComboBox
             x:Name="ComboBox_WindowIcon"
-            Grid.Row="5"
+            Grid.Row="2"
             Grid.Column="1"
             VerticalContentAlignment="Center"
             HorizontalContentAlignment="Center"
@@ -150,7 +90,7 @@
         </ComboBox>
         <ComboBox
             x:Name="ComboBox_Custom_WindowIcon"
-            Grid.Row="5"
+            Grid.Row="2"
             Grid.Column="2"
             IsEditable="False"
             StaysOpenOnEdit="True"
@@ -167,12 +107,111 @@
 
 
         <Label
+            Grid.Row="3"
+            Grid.Column="0"
+            Content="3.标题(Caption):" />
+        <TextBox
+            Name="TB_Title"
+            Grid.Row="3"
+            Grid.Column="1"
+            Padding="2 2 0 0"
+            MinWidth="300"
+            Text="这是标题(This is Title~)" />
+
+
+        <Label
+            Grid.Row="4"
+            Grid.Column="0"
+            Content="4.❌️关闭按钮是否能点击(Close button clickable):" />
+        <ComboBox
+            x:Name="ComboBox_EnableCloseBtn"
+            Grid.Row="4"
+            Grid.Column="1"
+            VerticalContentAlignment="Center"
+            HorizontalContentAlignment="Center"
+            IsEditable="False"
+            StaysOpenOnEdit="True"
+            SelectedIndex="0">
+            <ComboBoxItem>true(默认Default)</ComboBoxItem>
+            <ComboBoxItem>false</ComboBoxItem>
+        </ComboBox>
+
+
+        <Label
+            Grid.Row="5"
+            Grid.Column="0"
+            Content="5.Esc按下后是否关闭(Esc press closeable):" />
+        <ComboBox
+            x:Name="ComboBox_CloseOnPressedEsc"
+            Grid.Row="5"
+            Grid.Column="1"
+            VerticalContentAlignment="Center"
+            HorizontalContentAlignment="Center"
+            IsEditable="False"
+            StaysOpenOnEdit="True"
+            SelectedIndex="0">
+            <ComboBoxItem>true(默认Default)</ComboBoxItem>
+            <ComboBoxItem>false</ComboBoxItem>
+        </ComboBox>
+
+
+        <Label
             Grid.Row="6"
             Grid.Column="0"
-            Content="6.按钮(Button):" />
+            Content="6.图标(Icon):" />
+        <ComboBox
+            x:Name="ComboBox_Icon"
+            Grid.Row="6"
+            Grid.Column="1"
+            VerticalContentAlignment="Center"
+            HorizontalContentAlignment="Center"
+            IsEditable="False"
+            StaysOpenOnEdit="True"
+            SelectedIndex="0">
+            <ComboBoxItem>MessageBoxImage.None</ComboBoxItem>
+            <ComboBoxItem>MessageBoxImage.Error(❌️Hand, Stop)</ComboBoxItem>
+            <ComboBoxItem>MessageBoxImage.Question ❓️</ComboBoxItem>
+            <ComboBoxItem>MessageBoxImage.Exclamation(⚠️Warning)</ComboBoxItem>
+            <ComboBoxItem>MessageBoxImage.Asterisk(❕️ Information)</ComboBoxItem>
+            <ComboBoxItem>Custom Icon(自定义图标)</ComboBoxItem>
+        </ComboBox>
+        <ComboBox
+            x:Name="ComboBox_Custom_Icon"
+            Grid.Row="6"
+            Grid.Column="2"
+            IsEditable="False"
+            StaysOpenOnEdit="True"
+            VerticalContentAlignment="Center"
+            SelectedIndex="0">
+            <ComboBoxItem>
+                <Image Source="pack://application:,,,/Resources/Images/icon_switch_green2.png" Width="34" Height="15" />
+            </ComboBoxItem>
+            <ComboBoxItem>
+                <Image Source="pack://application:,,,/Resources/Images/icon_switch_lightyellow.png" Width="34"
+                       Height="15" />
+            </ComboBoxItem>
+        </ComboBox>
+
+
+        <Label
+            Grid.Row="7"
+            Grid.Column="0"
+            Content="7.内容(Message):" />
+        <TextBox
+            Name="TB_Message"
+            Grid.Row="7"
+            Grid.Column="1"
+            Padding="2 2 0 0"
+            Text="This is Message~" />
+
+
+        <Label
+            Grid.Row="8"
+            Grid.Column="0"
+            Content="8.按钮(Button):" />
         <ComboBox
             x:Name="ComboBox_Button"
-            Grid.Row="6"
+            Grid.Row="8"
             Grid.Column="1"
             VerticalContentAlignment="Center"
             HorizontalContentAlignment="Center"
@@ -188,12 +227,12 @@
 
 
         <Label
-            Grid.Row="7"
+            Grid.Row="9"
             Grid.Column="0"
-            Content="7.按钮Min宽度(ButtonMinWidth):" />
+            Content="9.按钮Min宽度(ButtonMinWidth):" />
         <ComboBox
             x:Name="ComboBox_ButtonMinWidth"
-            Grid.Row="7"
+            Grid.Row="9"
             Grid.Column="1"
             VerticalContentAlignment="Center"
             HorizontalContentAlignment="Center"
@@ -208,60 +247,110 @@
 
 
         <Label
-            Grid.Row="8"
+            Grid.Row="10"
             Grid.Column="0"
-            Content="8.按钮Ok显示(Button Ok Text):" />
+            Content="10.按钮Ok显示&amp;点击后是否Close窗口&#x0A;(Button Ok Text &amp; Closeable on Click):" />
         <TextBox
             Name="TB_OkText"
-            Grid.Row="8"
+            Grid.Row="10"
             Grid.Column="1"
+            VerticalContentAlignment="Center"
             Padding="2 2 0 0"
             Text="Okey~" />
+        <ComboBox
+            x:Name="ComboBox_CloseOnClickOk"
+            Grid.Row="10"
+            Grid.Column="2"
+            VerticalContentAlignment="Center"
+            HorizontalContentAlignment="Center"
+            IsEditable="False"
+            StaysOpenOnEdit="True"
+            SelectedIndex="0">
+            <ComboBoxItem>true</ComboBoxItem>
+            <ComboBoxItem>false</ComboBoxItem>
+        </ComboBox>
 
 
         <Label
-            Grid.Row="9"
+            Grid.Row="11"
             Grid.Column="0"
-            Content="9.按钮Cancel显示(Button Cancel Text):" />
+            Content="11.按钮Cancel显示&amp;点击后是否Close窗口&#x0A;(Button Cancel Text &amp; Closeable on Click):" />
         <TextBox
             Name="TB_CancelText"
-            Grid.Row="9"
+            Grid.Row="11"
             Grid.Column="1"
-            Padding="2 2 0 0"
-            Text="Cancel~" />
+            VerticalContentAlignment="Center"
+            Padding="2 2 0 0" />
+        <ComboBox
+            x:Name="ComboBox_CloseOnClickCancel"
+            Grid.Row="11"
+            Grid.Column="2"
+            VerticalContentAlignment="Center"
+            HorizontalContentAlignment="Center"
+            IsEditable="False"
+            StaysOpenOnEdit="True"
+            SelectedIndex="0">
+            <ComboBoxItem>true</ComboBoxItem>
+            <ComboBoxItem>false</ComboBoxItem>
+        </ComboBox>
 
 
         <Label
-            Grid.Row="10"
+            Grid.Row="12"
             Grid.Column="0"
-            Content="10.按钮Yes显示(Button Yes Text):" />
+            Content="12.按钮Yes显示&amp;点击后是否Close窗口&#x0A;(Button Yes Text &amp; Closeable on Click):" />
         <TextBox
             Name="TB_YesText"
-            Grid.Row="10"
+            Grid.Row="12"
             Grid.Column="1"
+            VerticalContentAlignment="Center"
             Padding="2 2 0 0"
             Text="Yeees~" />
+        <ComboBox
+            x:Name="ComboBox_CloseOnClickYes"
+            Grid.Row="12"
+            Grid.Column="2"
+            VerticalContentAlignment="Center"
+            HorizontalContentAlignment="Center"
+            IsEditable="False"
+            StaysOpenOnEdit="True"
+            SelectedIndex="0">
+            <ComboBoxItem>true</ComboBoxItem>
+            <ComboBoxItem>false</ComboBoxItem>
+        </ComboBox>
 
 
         <Label
-            Grid.Row="11"
+            Grid.Row="13"
             Grid.Column="0"
-            Content="11.按钮No显示(Button No Text):" />
+            Content="13.按钮No显示&amp;点击后是否Close窗口&#x0A;(Button No Text &amp; Closeable on Click):" />
         <TextBox
             Name="TB_NoText"
-            Grid.Row="11"
+            Grid.Row="13"
             Grid.Column="1"
-            Padding="2 2 0 0"
-            Text="Nooo~" />
+            VerticalContentAlignment="Center"
+            Padding="2 2 0 0" />
+        <ComboBox
+            x:Name="ComboBox_CloseOnClickNo"
+            Grid.Row="13"
+            Grid.Column="2"
+            VerticalContentAlignment="Center"
+            HorizontalContentAlignment="Center"
+            IsEditable="False"
+            StaysOpenOnEdit="True"
+            SelectedIndex="0">
+            <ComboBoxItem>true</ComboBoxItem>
+            <ComboBoxItem>false</ComboBoxItem>
+        </ComboBox>
 
 
         <Label
-            Grid.Row="12"
+            Grid.Row="14"
             Grid.Column="0"
-            Content="12.按Enter时默认值(DefaultResult):" />
+            Content="14.按Enter时默认值(DefaultResult):" />
         <ComboBox
             x:Name="ComboBox_DefaultResult"
-            Grid.Row="12"
+            Grid.Row="14"
             Grid.Column="1"
             VerticalContentAlignment="Center"
             HorizontalContentAlignment="Center"
@@ -278,23 +367,31 @@
 
         <Button
             Name="Btn_Show"
-            Grid.Row="13"
+            Grid.Row="15"
             Grid.Column="0"
-            Grid.ColumnSpan="2"
             Width="200"
             Margin="0 15 0 0"
             Padding="8"
-            Content="显示(Show)"
+            Content="Show() 显示"
+            Click="OnBtnClick" />
+        <Button
+            Name="Btn_ShowDialog"
+            Grid.Row="15"
+            Grid.Column="1"
+            Width="200"
+            Margin="0 15 0 0"
+            Padding="8"
+            Content="ShowDialog() 显示"
             Click="OnBtnClick" />
 
 
         <Label
-            Grid.Row="14"
+            Grid.Row="16"
             Grid.Column="0"
             Content="结果(Result):" />
         <TextBlock
             Name="TB_Result"
-            Grid.Row="14"
+            Grid.Row="16"
             Grid.Column="1"
             Foreground="Red"
             Padding="0 10 0 10" />

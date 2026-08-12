@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -8,17 +7,16 @@ using Actor.CustomMessageBox.Resources;
 namespace Actor.CustomMessageBox {
 
     /// <summary>
-    /// 自定义消息框，支持 Builder 模式，使用标准 MessageBoxButton, MessageBoxImage 和 MessageBoxResult
+    /// 自定义消息框，支持 Builder 模式设置n个属性，使用标准 MessageBoxImage, MessageBoxButton 和 MessageBoxResult
     /// </summary>
     public partial class MessageBox2 : Window {
 
+        private const int MfByCommand = 0x0000, ScClose = 0xF060, MfGrayed = 0x0001, WmSysCommand = 0x0112;
         private MessageBoxResult _result = MessageBoxResult.None;
         private Window _owner;
-        // 状态跟踪
-        private bool _defaultSet, _cancelSet;
-        // 暂存当前被设为取消的按钮，用于撤销
-        private Button _cancelCandidate;
-        
+        private readonly bool _enableCloseBtn, _closeOnClickOk, _closeOnClickCancel, _closeOnClickYes, _closeOnClickNo;
+        private Action<MessageBoxResult> _onBtnClick;
+
         internal MessageBox2(Builder builder) {
             InitializeComponent();
             // 不在任务栏显示
@@ -26,6 +24,11 @@ namespace Actor.CustomMessageBox {
             
             if (!(builder is IMessageBoxBuilder data)) return;
             this._owner = data.Owner;
+            this._enableCloseBtn = data.EnableCloseBtn;
+            this._closeOnClickOk = data.CloseOnClickOk;
+            this._closeOnClickCancel = data.CloseOnClickCancel;
+            this._closeOnClickYes = data.CloseOnClickYes;
+            this._closeOnClickNo = data.CloseOnClickNo;
 
             //设置Window↖️角的icon
             if (data.HasWindowIcon) {
@@ -59,6 +62,35 @@ namespace Actor.CustomMessageBox {
 
             // 创建按钮
             CreateButtons(data);
+
+            //Esc按钮按下的时候, if给按钮设置了IsCancel, 则: Show()默认不会消失, ShowDialog()默认会消失
+            //而为了不让ShowDialog()的时候被强制消失, 则按钮都没有设置IsCancel, 乺这儿需自己接管
+            this.PreviewKeyDown += (s, e) => {
+                if (e.Key == System.Windows.Input.Key.Escape) {
+                    e.Handled = !data.CloseOnPressedEsc;
+                    //赋值, 用于ShowDialog()方式的返回
+                    this._result = MessageBoxResult.Cancel;
+                    if (data.CloseOnPressedEsc) Close();
+                    _onBtnClick?.Invoke(this._result);
+                }
+            };
+        }
+
+        /// <summary>确保窗口句柄有效</summary>
+        /// <param name="e"></param>
+        protected override void OnSourceInitialized(EventArgs e) {
+            base.OnSourceInitialized(e);
+            if (!_enableCloseBtn) RemoveCloseButton();
+            //捕获点击 ❌️，且不影响 Esc 等其他关闭方式
+            var helper = new System.Windows.Interop.WindowInteropHelper(this);
+            System.Windows.Interop.HwndSource.FromHwnd(helper.Handle)?.AddHook(hook: (IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled) => {
+                if (msg == WmSysCommand && (wParam.ToInt32() & 0xFFF0) == ScClose) {
+                    handled = !this._enableCloseBtn;
+                    this._result = MessageBoxResult.None;
+                    _onBtnClick?.Invoke(this._result);
+                }
+                return IntPtr.Zero;
+            });
         }
 
         /// <summary>创建Builder</summary>
@@ -72,8 +104,38 @@ namespace Actor.CustomMessageBox {
         /// <returns></returns>
         public static Builder NewBuilder(Window owner, string message) => new Builder(owner, message);
 
+        private Window GetTargetOwner() {
+            if (_owner != null && _owner.IsVisible) return _owner;
+            var main = Application.Current.MainWindow;
+            return (main != null && main.IsVisible) ? main : null;
+        }
 
-        /// <summary>显示</summary>
+        /// <summary>显示(异步方法, 不阻塞线程)</summary>
+        /// <param name="onBtnClick">当按钮点击 /Esc按下 后回调结果</param>
+        /// <param name="modal">
+        ///     是否模态, if modal = true阻止点击父窗口, 默认true <br />
+        ///     无法让其他非父窗口被点击，也无法产生闪烁效果——只有 ShowDialog 拥有系统级模态和闪烁。<br />
+        ///     而 ShowDialog() 本身无法非模态。
+        /// </param>
+        public void Show(Action<MessageBoxResult> onBtnClick, bool modal = true) {
+            this._onBtnClick = onBtnClick;
+            Window targetOwner = GetTargetOwner();
+            this.Owner = targetOwner;
+            this._owner = null;
+            if (modal && targetOwner != null) {
+                targetOwner.IsEnabled = false;
+                this.Closed += (s, e) => targetOwner.IsEnabled = true;
+            }
+            base.Show();
+        }
+
+        /// <summary>不要调用这个方法</summary>
+        [Obsolete(message: "不要调用这个方法(Don't call me)", error: true)]
+        public new void Show() {
+            base.Show();
+        }
+
+        /// <summary>显示(同步方法, 阻塞线程有返回值)</summary>
         /// <returns>返回被点击的按钮, 例: <br />
         ///     <see cref="F:System.Windows.MessageBoxResult.None">MessageBoxResult.None</see> <br />
         ///     <see cref="F:System.Windows.MessageBoxResult.OK">MessageBoxResult.OK</see> <br />
@@ -81,28 +143,17 @@ namespace Actor.CustomMessageBox {
         ///     <see cref="F:System.Windows.MessageBoxResult.Yes">MessageBoxResult.Yes</see> <br />
         ///     <see cref="F:System.Windows.MessageBoxResult.No">MessageBoxResult.No</see>
         /// </returns>
-        public new MessageBoxResult Show() {
-            // base.Show();
-            Window targetOwner = this._owner;
-            if (targetOwner == null || !targetOwner.IsVisible) {
-                var main = Application.Current.MainWindow;
-                if (main != null && main.IsVisible) {
-                    targetOwner = main;
-                } else targetOwner = null;
-            }
-            this.Owner = targetOwner;
+        public new MessageBoxResult ShowDialog() {
+            this.Owner = GetTargetOwner();
             this._owner = null;
+            //ShowDialog阻塞线程, 等CLose()后返回 _result
             bool? showDialog = base.ShowDialog();
             // return MessageBox.Win32ToMessageBoxResult(...);
             return _result;
         }
 
-        /// <summary>
-        /// 内置标准图标生成（纯 WPF 矢量路径，无 WinForms）
-        /// </summary>
-        /// <param name="image"></param>
-        /// <returns></returns>
-        private ImageSource GetStandardIconImageSource(MessageBoxImage image) {
+        /// <summary>MessageBoxImage 转换成 ImageSource</summary>
+        private static ImageSource GetStandardIconImageSource(MessageBoxImage image) {
             System.Drawing.Icon sysIcon;
             switch (image) {
                 case MessageBoxImage.Information:
@@ -121,10 +172,7 @@ namespace Actor.CustomMessageBox {
                 default:
                     return null;
             }
-            return System.Windows.Interop.Imaging.CreateBitmapSourceFromHIcon(
-                sysIcon.Handle,
-                new Int32Rect(0, 0, sysIcon.Width, sysIcon.Height),
-                System.Windows.Media.Imaging.BitmapSizeOptions.FromEmptyOptions());
+            return System.Windows.Interop.Imaging.CreateBitmapSourceFromHIcon(sysIcon.Handle, new Int32Rect(0, 0, sysIcon.Width, sysIcon.Height), System.Windows.Media.Imaging.BitmapSizeOptions.FromEmptyOptions());
         }
 
         // ---------- 动态生成按钮 ----------
@@ -136,10 +184,10 @@ namespace Actor.CustomMessageBox {
             this.StackPanel_Buttons.Visibility = Visibility.Visible;
             this.StackPanel_Buttons.Children.Clear();
             // 默认文本
-            string okText = string.IsNullOrEmpty(builder.OkText) ? Strings.OK : builder.OkText;
-            string cancelText = string.IsNullOrEmpty(builder.CancelText) ? Strings.Cancel : builder.CancelText;
-            string yesText = string.IsNullOrEmpty(builder.YesText) ? Strings.Yes : builder.YesText;
-            string noText = string.IsNullOrEmpty(builder.NoText) ? Strings.No : builder.NoText;
+            object okText = GetContent(builder.OkText, Strings.OK);
+            object cancelText = GetContent(builder.CancelText, Strings.Cancel);
+            object yesText = GetContent(builder.YesText, Strings.Yes);
+            object noText = GetContent(builder.NoText, Strings.No);
             switch (builder.Button) {
                 case MessageBoxButton.OK:
                     AddButton(builder, okText, MessageBoxResult.OK);
@@ -162,16 +210,14 @@ namespace Actor.CustomMessageBox {
                     AddButton(builder, okText, MessageBoxResult.OK);
                     break;
             }
-            // 如果因为某种原因 defaultSet 仍为 false（例如没有按钮或 defaultResult 不匹配），强制设置第一个为默认
-            if (!_defaultSet && this.StackPanel_Buttons.Children.Count > 0) {
-                Button firstElement = (Button)this.StackPanel_Buttons.Children[0];
-                firstElement.IsDefault = true;
-                SetElementFocus(firstElement);
-            }
-            _cancelCandidate = null;
         }
-        
-        private void AddButton(IMessageBoxBuilder builder, string content, MessageBoxResult btnResult) {
+
+        private static object GetContent(object value, string defaultValue) {
+            if (value == null || (value is string s && s.Length == 0)) return defaultValue;
+            return value;
+        }
+
+        private void AddButton(IMessageBoxBuilder builder, object content, MessageBoxResult btnResult) {
             var btn = new Button {
                 Content = content,
                 MinWidth = builder.ButtonMinWidth,
@@ -179,39 +225,15 @@ namespace Actor.CustomMessageBox {
                 Height = 26, // 保留固定高度（可改为统一外观）
                 Padding = new Thickness(8, 4, 8, 4),// 内边距让文字不贴边
                 Margin = new Thickness(8, 0, 0, 0),
-                // IsDefault = isDefault,
-                // IsCancel = isCancel,
+                IsDefault = btnResult == builder.DefaultResult,
+                // IsCancel = isCancel, //if=true: 点击这个按钮(或按下 Esc)时自动关闭窗口，即使 Click 事件里没有关闭也会自动关闭Window。
                 Tag = btnResult
             };
-            // 设置默认按钮：优先匹配 defaultResult，否则第一个按钮为默认
-            if (!_defaultSet) {
-                if (builder.DefaultResult != MessageBoxResult.None && btnResult == builder.DefaultResult) {
-                    btn.IsDefault = true;
-                    _defaultSet = true;
-                    SetElementFocus(btn);
-                } else if (builder.DefaultResult == MessageBoxResult.None && this.StackPanel_Buttons.Children.Count == 0) {
-                    // 如果没有指定默认结果，则第一个按钮为默认
-                    btn.IsDefault = true;
-                    _defaultSet = true;
-                    SetElementFocus(btn);
-                }
-            }
-            // 取消按钮逻辑：优先 Cancel，其次 No，且只保留最优先的一个
-            if (btnResult == MessageBoxResult.Cancel) {
-                // 如果之前有候选取消按钮（可能是No），撤销它的 IsCancel
-                if (_cancelCandidate != null) _cancelCandidate.IsCancel = false;
-                btn.IsCancel = true;
-                _cancelCandidate = btn;
-                _cancelSet = true;
-            } else if (btnResult == MessageBoxResult.No && !_cancelSet) {
-                // 只有当尚未设置任何取消按钮时，才将 No 设为取消
-                btn.IsCancel = true;
-                _cancelCandidate = btn;
-                _cancelSet = true;
-            }
+            if (btn.IsDefault) SetElementFocus(btn);
+
             btn.Click += (s, e) => {
-                this._result = (MessageBoxResult)((Button)s).Tag;
-                this.Close();
+                this._result = (MessageBoxResult)((FrameworkElement)s).Tag;
+                JudgeAndCloseWindow();
             };
             this.StackPanel_Buttons.Children.Add(btn);
         }
@@ -222,7 +244,6 @@ namespace Actor.CustomMessageBox {
         /// Dispatcher.BeginInvoke 将焦点设置操作放入消息队列，在窗口布局完成、所有 Loaded 事件触发之后执行，此时视觉树已经完整，焦点能够正确设置。
         /// Background 优先级确保它不会阻塞 UI 渲染，几乎瞬间完成。
         /// </summary>
-        /// <param name="element"></param>
         private void SetElementFocus(FrameworkElement element) {
             // btn.Background = SystemColors.HighlightBrush;
             // btn.Foreground = SystemColors.HighlightTextBrush;
@@ -236,10 +257,40 @@ namespace Actor.CustomMessageBox {
             this.Dispatcher.BeginInvoke(new Action(() => element.Focus()), System.Windows.Threading.DispatcherPriority.Input);
         }
 
-        // 处理点右上角 X 关闭
-        protected override void OnClosing(CancelEventArgs e) {
-            // result 保持 None
-            base.OnClosing(e);
+        private void JudgeAndCloseWindow() {
+            if (this._result == MessageBoxResult.OK && this._closeOnClickOk || this._result == MessageBoxResult.Cancel && this._closeOnClickCancel || this._result == MessageBoxResult.Yes && this._closeOnClickYes || this._result == MessageBoxResult.No && this._closeOnClickNo) Close();
+            _onBtnClick?.Invoke(this._result);
+        }
+
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        private static extern IntPtr GetSystemMenu(IntPtr hWnd, bool bRevert);
+
+        /// <summary>移除按钮<br />
+        /// Win32 API 的原型是 BOOL RemoveMenu(...)，在 C/C++ 中 BOOL 本质是 int（通常 0 表示失败，非 0 表示成功）。<br />
+        /// 在 .NET P/Invoke 中，我们可以直接映射为 int，也可以映射为 bool（配合 [MarshalAs(UnmanagedType.Bool)] 让运行时自动转换）。
+        /// </summary>
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        private static extern /*int*/ bool RemoveMenu(IntPtr hMenu, int nPosition, int wFlags);
+
+        // 备用方案：禁用而不是移除（使关闭按钮变灰）
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        private static extern bool EnableMenuItem(IntPtr hMenu, int uIdEnableItem, int uEnable);
+
+        private bool RemoveCloseButton() {
+            try {
+                var hWnd = new System.Windows.Interop.WindowInteropHelper(this).Handle;
+                if (hWnd == IntPtr.Zero) return false; // 安全保护
+                IntPtr hMenu = GetSystemMenu(hWnd, false);
+                if (hMenu == IntPtr.Zero) return false;
+                bool removeMenu = RemoveMenu(hMenu, ScClose, MfByCommand);
+                if (removeMenu) return true;
+                // 如果移除失败，可尝试通过 EnableMenuItem 禁用（使按钮变灰不可点）
+                return EnableMenuItem(hMenu, ScClose, MfByCommand | MfGrayed);
+            } catch (Exception ex) {
+                // 可记录日志，但不要抛出异常以免影响界面显示
+                System.Diagnostics.Debug.WriteLine($"RemoveCloseButton failed: {ex}");
+                return false;
+            }
         }
     }
 }

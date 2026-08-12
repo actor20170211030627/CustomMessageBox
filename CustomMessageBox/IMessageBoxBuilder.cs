@@ -6,20 +6,26 @@ namespace Actor.CustomMessageBox {
     // 内部接口，仅程序集内可见
     internal interface IMessageBoxBuilder {
         Window Owner { get; }
-        string Title { get; }
-        string Message { get; }
-        MessageBoxButton Button { get; }
-        bool HasButtons { get; }
-        double ButtonMinWidth { get; }
-        MessageBoxImage StandardIcon { get; }
-        ImageSource CustomIcon { get; }
         bool HasWindowIcon { get; }
         MessageBoxImage WindowIcon { get; }
         ImageSource CustomWindowIcon { get; }
+        string Title { get; }
+        bool EnableCloseBtn { get; }
+        MessageBoxImage StandardIcon { get; }
+        ImageSource CustomIcon { get; }
+        string Message { get; }
+        bool HasButtons { get; }
+        MessageBoxButton Button { get; }
+        double ButtonMinWidth { get; }
         MessageBoxResult DefaultResult { get; }
-        string OkText { get; }
-        string CancelText { get; }
-        string YesText { get; }
-        string NoText { get; }
+        object OkText { get; }
+        bool CloseOnClickOk { get; }
+        object CancelText { get; }
+        bool CloseOnClickCancel { get; }
+        object YesText { get; }
+        bool CloseOnClickYes { get; }
+        object NoText { get; }
+        bool CloseOnClickNo { get; }
+        bool CloseOnPressedEsc { get; }
     }
 }
