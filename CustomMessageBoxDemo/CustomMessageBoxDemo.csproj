@@ -93,9 +93,11 @@
         <None Include="packages.config" />
     </ItemGroup>
     <ItemGroup>
+      <Content Include=".gitignore" />
       <Content Include="app.manifest" />
       <Resource Include="Resources\Images\icon_switch_green2.png" />
       <Resource Include="Resources\Images\icon_switch_lightyellow.png" />
+      <Content Include="..\README.md" />
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\CustomMessageBox\CustomMessageBox.csproj">

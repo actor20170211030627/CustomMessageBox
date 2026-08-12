@@ -3,7 +3,7 @@
 > [Github](https://github.com/actor20170211030627/CustomMessageBox)
 
 ## 1.Screenshot
-![Loading...](captures/Snipaste_2026-08-10_14-50-27.png)
+![Loading...](captures/Snipaste_2026-08-13_02-23-59.png)
 ![Loading...](captures/Snipaste_2026-08-10_14-50-55.png)
 
 ## 2.Sample

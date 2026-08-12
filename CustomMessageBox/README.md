@@ -4,7 +4,7 @@
 
 [//]: # (由于NuGet找不到Github的相对图片, 所以这儿写死图片地址)
 ## 1.Screenshot
-![Loading...](https://raw.githubusercontent.com/actor20170211030627/CustomMessageBox/main/captures/Snipaste_2026-08-10_14-50-27.png)
+![Loading...](https://raw.githubusercontent.com/actor20170211030627/CustomMessageBox/main/captures/Snipaste_2026-08-13_02-23-59.png)
 ![Loading...](https://raw.githubusercontent.com/actor20170211030627/CustomMessageBox/main/captures/Snipaste_2026-08-10_14-50-55.png)
 
 ## 2.Sample
